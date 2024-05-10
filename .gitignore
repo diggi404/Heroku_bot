@@ -1,0 +1,7 @@
+.git
+.env
+.DS_Store
+.vscode
+.idea
+create_db.py
+test.py
