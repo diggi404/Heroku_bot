@@ -109,9 +109,15 @@ def step_authorize_bot(
                         reply_markup=hard_buttons.main_markup,
                     )
                     active_dict[chat_id] = oauth
-        else:
+        elif check_req.status_code == 401:
             bot.send_message(
                 chat_id,
                 "Your Oauth token is invalid.",
+                reply_markup=hard_buttons.au_markup,
+            )
+        else:
+            bot.send_message(
+                chat_id,
+                "Error validating your token. Try again.",
                 reply_markup=hard_buttons.au_markup,
             )
