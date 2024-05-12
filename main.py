@@ -25,6 +25,21 @@ from inline_callback_handlers.apps.back_to_app_list import back_to_app_list
 from inline_callback_handlers.apps.move_back_releases import move_back_releases
 from inline_callback_handlers.apps.move_fwd_releases import move_fwd_releases
 from inline_callback_handlers.apps.show_releases import show_releases
+from inline_callback_handlers.apps.view_logs import view_logs
+from inline_callback_handlers.apps.config_vars import config_vars
+from inline_callback_handlers.apps.add_config_var import (
+    add_config_var,
+    yes_config_var,
+    no_config_var,
+)
+from inline_callback_handlers.apps.delete_config_var import (
+    delete_config_var,
+    yes_del_config_var,
+)
+from inline_callback_handlers.apps.edit_config_var import (
+    edidt_config_var,
+    yes_edit_config_var,
+)
 
 
 bot = TeleBot(os.getenv("BOT_TOKEN"))
@@ -32,6 +47,8 @@ bot = TeleBot(os.getenv("BOT_TOKEN"))
 active_dict = dict()
 apps_page_dict = dict()
 releases_page_dict = dict()
+logs_dict = dict()
+config_var_dict = dict()
 
 
 @bot.message_handler(commands=["start"])
@@ -43,7 +60,7 @@ def handle_start(message: types.Message):
 def handle_callback_query(call: types.CallbackQuery):
     button_data = call.data
     chat_id = call.from_user.id
-    msg_id = call.message.id
+    msg_id = call.message.message_id
 
     if button_data == "cancel menu":
         bot.delete_message(chat_id, msg_id)
@@ -80,6 +97,47 @@ def handle_callback_query(call: types.CallbackQuery):
 
     elif button_data.startswith("go back to app_"):
         view_app(bot, chat_id, msg_id, button_data, active_dict)
+
+    elif button_data.startswith("logs_"):
+        logs_dict[msg_id] = True
+        view_logs(bot, chat_id, msg_id, button_data, active_dict, logs_dict)
+
+    elif button_data.startswith("end logs_"):
+        old_msg_id = int(button_data.split("_")[1])
+        logs_dict[old_msg_id] = False
+        bot.edit_message_text("Logs trail exited.", chat_id, msg_id)
+
+    elif button_data.startswith("configs_"):
+        config_vars(bot, chat_id, msg_id, button_data, active_dict)
+
+    elif button_data.startswith("add var_"):
+        add_config_var(bot, chat_id, msg_id, button_data, active_dict, config_var_dict)
+
+    elif button_data.startswith("con var_"):
+        yes_config_var(bot, chat_id, msg_id, button_data, active_dict, config_var_dict)
+
+    elif button_data.startswith("no var_"):
+        no_config_var(bot, chat_id, msg_id, button_data, active_dict, config_var_dict)
+
+    elif button_data.startswith("del var_"):
+        delete_config_var(
+            bot, chat_id, msg_id, button_data, active_dict, config_var_dict
+        )
+
+    elif button_data.startswith("yes del var_"):
+        yes_del_config_var(
+            bot, chat_id, msg_id, button_data, active_dict, config_var_dict
+        )
+
+    elif button_data.startswith("edit var_"):
+        edidt_config_var(
+            bot, chat_id, msg_id, button_data, active_dict, config_var_dict
+        )
+
+    elif button_data.startswith("yes edit var_"):
+        yes_edit_config_var(
+            bot, chat_id, msg_id, button_data, active_dict, config_var_dict
+        )
 
 
 @bot.message_handler(func=lambda message: message.text == "Authorize Bot 🤖")

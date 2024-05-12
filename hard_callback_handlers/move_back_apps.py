@@ -63,7 +63,7 @@ def move_back_apps(
             )
             markup.add(close_btn)
             bot.edit_message_text(
-                f"➖➖➖➖HEROKU APPS({len(apps_req.json())})➖➖➖➖\n\n",
+                f"➖➖➖➖HEROKU APPS ({len(apps_req.json())})➖➖➖➖\n\n",
                 chat_id,
                 msg_id,
                 reply_markup=markup,

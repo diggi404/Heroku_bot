@@ -81,7 +81,7 @@ def apps(
                         markup.add(close_btn)
                         apps_page_dict[chat_id] = 1
                         bot.edit_message_text(
-                            f"➖➖➖➖HEROKU APPS({len(apps_req.json())})➖➖➖➖\n\n",
+                            f"➖➖➖➖HEROKU APPS ({len(apps_req.json())})➖➖➖➖\n\n",
                             chat_id,
                             new_msg.id,
                             reply_markup=markup,
@@ -176,7 +176,7 @@ def apps(
                     markup.add(close_btn)
                     apps_page_dict[chat_id] = 1
                     bot.edit_message_text(
-                        f"➖➖➖➖HEROKU APPS({len(apps_req.json())})➖➖➖➖\n\n",
+                        f"➖➖➖➖HEROKU APPS ({len(apps_req.json())})➖➖➖➖\n\n",
                         chat_id,
                         new_msg.id,
                         reply_markup=markup,

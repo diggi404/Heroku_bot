@@ -36,9 +36,9 @@ Web URL: <code>{app_info['web_url']}</code>
 State: <b>{m_status[stat_req.json()[0]['quantity']]}</b>
 Dyno Type: <b>{stat_req.json()[0]['size'].upper()}</b>
 Region: <b>{app_info['region']['name'].upper()}</b>
-Released On: <b>{app_info['released_at']}</b>
+Created On: <b>{app_info['released_at']}</b>
 Last Updated: <b>{app_info['updated_at']}</b>
-➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+➖➖➖➖➖➖➖➖➖➖➖➖
             """
             markup = types.InlineKeyboardMarkup()
             btn1 = types.InlineKeyboardButton(
@@ -54,7 +54,7 @@ Last Updated: <b>{app_info['updated_at']}</b>
                 "Config Vars", callback_data=f"configs_{app_id}"
             )
             btn5 = types.InlineKeyboardButton(
-                "View Logs", callback_data=f"logs_{app_id}"
+                "View Logs", callback_data=f"logs_{app_info['name']}"
             )
             btn6 = types.InlineKeyboardButton(
                 f"Turn {'ON' if stat_req.json()[0]['quantity'] == 0 else 'OFF'}",

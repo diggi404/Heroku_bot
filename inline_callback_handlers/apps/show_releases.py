@@ -25,12 +25,12 @@ def show_releases(
         )
     except:
         bot.edit_message_text(
-            "Error fetching the app info. Try again.", chat_id, msg_id
+            "Error fetching the app releases. Try again.", chat_id, msg_id
         )
     else:
         if req.status_code == 200:
             app_name = str()
-            releases = req.json()
+            releases = list(reversed(req.json()))
             for r in releases:
                 app_name = r["app"]["name"]
                 break
@@ -79,5 +79,5 @@ def show_releases(
             )
         else:
             bot.edit_message_text(
-                "Error fetching the app info. Try again.", chat_id, msg_id
+                "Error fetching the app releases. Try again.", chat_id, msg_id
             )
