@@ -60,6 +60,18 @@ def deploy_app(
                 msg_id,
                 reply_markup=hard_buttons.au_markup,
             )
+        elif req.status_code == 404:
+            m = types.InlineKeyboardMarkup()
+            b = types.InlineKeyboardButton(
+                "Configure Git", callback_data=f"git_{app_id}"
+            )
+            m.add(b)
+            bot.edit_message_text(
+                "No Github reposity exists on this app. Use the button below to link one.",
+                chat_id,
+                msg_id,
+                reply_markup=m,
+            )
         else:
             bot.edit_message_text(
                 "Error fetching git repo branches. Try again.",

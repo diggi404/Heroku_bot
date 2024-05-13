@@ -33,7 +33,6 @@ def view_app(
 ➖➖{app_info['name'].upper()}➖➖
 
 Web URL: <a href='{app_info['web_url']}'>click here</a>
-Git Repo: <a href='{app_info['git_url']}'>repo_link</a>
 State: <b>{m_status[stat_req.json()[0]['quantity']] if len(stat_req.json()) > 0 else 'Not Configured'}</b>
 Dyno Type: <b>{stat_req.json()[0]['size'].upper() if len(stat_req.json()) > 0 else 'Not Configured'}</b>
 Region: <b>{app_info['region']['name'].upper()}</b>
@@ -57,7 +56,9 @@ Last Updated: <b>{app_info['updated_at']}</b>
             btn5 = types.InlineKeyboardButton(
                 "View Logs", callback_data=f"logs_{app_info['name']}"
             )
-
+            btn7 = types.InlineKeyboardButton(
+                "Delete App", callback_data=f"del app_{app_id}"
+            )
             back_btn = types.InlineKeyboardButton(
                 "<< Back", callback_data="go back to app list"
             )
@@ -72,7 +73,9 @@ Last Updated: <b>{app_info['updated_at']}</b>
                     f"Turn {'ON' if stat_req.json()[0]['quantity'] == 0 else 'OFF'}",
                     callback_data=f"turn_{stat_req.json()[0]['quantity']}_{app_id}",
                 )
-                markup.add(btn6)
+                markup.add(btn6, btn7)
+            else:
+                markup.add(btn7)
             markup.add(back_btn)
             markup.add(close_btn)
             bot.edit_message_text(

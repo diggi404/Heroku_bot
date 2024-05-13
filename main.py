@@ -48,6 +48,8 @@ from inline_callback_handlers.apps.delete_specific_addon import (
     delete_specific_addon,
     yes_delete_specific_addon,
 )
+from inline_callback_handlers.apps.delete_app import delete_app
+from inline_callback_handlers.apps.delete_app import yes_delete_app
 from inline_callback_handlers.apps.deploy_app import deploy_app
 from inline_callback_handlers.apps.branch_app_deploy import branch_app_deploy
 from inline_callback_handlers.create_app.app_name import app_name
@@ -225,6 +227,15 @@ def handle_callback_query(call: types.CallbackQuery):
     elif button_data.startswith("no del addon"):
         bot.edit_message_text("Operation aborted.", chat_id, msg_id)
 
+    elif button_data.startswith("del app_"):
+        delete_app(bot, chat_id, msg_id, button_data, active_dict)
+
+    elif button_data.startswith("yes del app_"):
+        yes_delete_app(bot, chat_id, msg_id, button_data, active_dict)
+
+    elif button_data.startswith("no del app_"):
+        view_app(bot, chat_id, msg_id, button_data, active_dict)
+
     elif button_data.startswith("deploy_"):
         deploy_app(bot, chat_id, msg_id, button_data, active_dict)
 
@@ -242,7 +253,7 @@ def handle_callback_query(call: types.CallbackQuery):
             bot, chat_id, msg_id, active_dict, button_data, git_details_dict
         )
 
-    elif button_data == "no git_":
+    elif button_data.startswith("no git_"):
         app_id = button_data.split("_")[1]
         m = types.InlineKeyboardMarkup()
         b = types.InlineKeyboardButton("View App", callback_data=f"app_{app_id}")

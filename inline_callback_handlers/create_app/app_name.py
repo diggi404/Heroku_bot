@@ -25,13 +25,14 @@ def app_name(
 def step_app_name(message: types.Message, bot: TeleBot, active_dict: dict, region: str):
     chat_id = message.from_user.id
     new_msg = bot.send_message(chat_id, "validing name...")
+    new_app_name = message.text.lower().strip()
     try:
         headers = {
             "Accept": "application/vnd.heroku+json; version=3",
             "Authorization": f"Bearer {active_dict[chat_id]}",
         }
         req = httpx.get(
-            f"https://api.heroku.com/apps/{message.text.strip()}",
+            f"https://api.heroku.com/apps/{new_app_name}",
             headers=headers,
         )
     except:
@@ -48,13 +49,13 @@ def step_app_name(message: types.Message, bot: TeleBot, active_dict: dict, regio
                     "Accept": "application/vnd.heroku+json; version=3.process-tier",
                     "Authorization": f"Bearer {active_dict[chat_id]}",
                 }
-                req_data = {"region": region, "name": message.text.strip()}
+                req_data = {"region": region, "name": new_app_name}
                 req = httpx.post(
                     f"https://api.heroku.com/teams/apps", headers=headers, json=req_data
                 )
             except:
                 bot.edit_message_text(
-                    "Error checking app name. Try again.", chat_id, new_msg.message_id
+                    "Error creating app. Try again.", chat_id, new_msg.message_id
                 )
             else:
                 if req.status_code == 201:
@@ -84,7 +85,7 @@ def step_app_name(message: types.Message, bot: TeleBot, active_dict: dict, regio
                     )
                 else:
                     bot.edit_message_text(
-                        "Error fetching the app info. Try again.",
+                        "Error creating app. Try again.",
                         chat_id,
                         msg.message_id,
                     )
