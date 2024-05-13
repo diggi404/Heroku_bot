@@ -28,17 +28,24 @@ def view_logs(
             headers=headers,
             json=data,
         )
+        app_req = httpx.get(
+            f"https://api.heroku.com/teams/apps/{app_name}", headers=headers
+        )
     except:
         bot.edit_message_text(
             "Error fetching the app logs. Try again.", chat_id, msg_id
         )
     else:
-        if req.status_code == 201:
+        if req.status_code == 201 and app_req.status_code == 200:
             log_url = req.json()["logplex_url"]
             m = types.InlineKeyboardMarkup()
             b = types.InlineKeyboardButton(
                 "Terminate 🔴", callback_data=f"end logs_{msg_id}"
             )
+            back_btn = types.InlineKeyboardButton(
+                "<< Back", callback_data=f"go b apps_{app_req.json()['id']}_{msg_id}"
+            )
+            m.add(back_btn)
             m.add(b)
             msg_str = f"➖➖{app_name.upper()}➖➖\n\n"
             thread = Thread(

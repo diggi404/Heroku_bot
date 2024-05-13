@@ -4,7 +4,12 @@ from keyboards import hard_buttons
 
 
 def config_vars(
-    bot: TeleBot, chat_id: int, msg_id: int, button_data: str, active_dict: dict
+    bot: TeleBot,
+    chat_id: int,
+    msg_id: int,
+    button_data: str,
+    active_dict: dict,
+    call_id: int,
 ):
     app_id = button_data.split("_")[1]
     if chat_id not in active_dict:
@@ -26,6 +31,11 @@ def config_vars(
     else:
         if req.status_code == 200:
             vars = dict(req.json())
+            if not vars:
+                bot.answer_callback_query(
+                    call_id, "No environment variables found.", show_alert=True
+                )
+                return
             var_list = []
             for key, value in vars.items():
                 var_list.append(

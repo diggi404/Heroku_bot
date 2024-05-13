@@ -50,6 +50,10 @@ from inline_callback_handlers.apps.delete_specific_addon import (
 )
 from inline_callback_handlers.apps.deploy_app import deploy_app
 from inline_callback_handlers.apps.branch_app_deploy import branch_app_deploy
+from inline_callback_handlers.create_app.app_name import app_name
+from inline_callback_handlers.create_app.choose_region import choose_region
+from inline_callback_handlers.create_app.connect_repo import connect_repo
+from inline_callback_handlers.create_app.fetch_git_profile import fetch_git_profile
 
 
 bot = TeleBot(os.getenv("BOT_TOKEN"))
@@ -61,6 +65,7 @@ logs_dict = dict()
 config_var_dict = dict()
 addons_page_dict = dict()
 addon_app_id_dict = dict()
+git_details_dict = dict()
 
 
 @bot.message_handler(commands=["start"])
@@ -110,6 +115,11 @@ def handle_callback_query(call: types.CallbackQuery):
     elif button_data.startswith("go back to app_"):
         view_app(bot, chat_id, msg_id, button_data, active_dict)
 
+    elif button_data.startswith("go b apps_"):
+        old_msg_id = int(button_data.split("_")[-1])
+        logs_dict[old_msg_id] = False
+        view_app(bot, chat_id, msg_id, button_data, active_dict)
+
     elif button_data.startswith("logs_"):
         logs_dict[msg_id] = True
         view_logs(bot, chat_id, msg_id, button_data, active_dict, logs_dict)
@@ -120,7 +130,7 @@ def handle_callback_query(call: types.CallbackQuery):
         bot.edit_message_text("Logs trail exited.", chat_id, msg_id)
 
     elif button_data.startswith("configs_"):
-        config_vars(bot, chat_id, msg_id, button_data, active_dict)
+        config_vars(bot, chat_id, msg_id, button_data, active_dict, call.id)
 
     elif button_data.startswith("add var_"):
         add_config_var(bot, chat_id, msg_id, button_data, active_dict, config_var_dict)
@@ -220,6 +230,34 @@ def handle_callback_query(call: types.CallbackQuery):
 
     elif button_data.startswith("branch:"):
         branch_app_deploy(bot, chat_id, msg_id, button_data, active_dict)
+
+    elif button_data == "create new app":
+        choose_region(bot, chat_id, msg_id, active_dict)
+
+    elif button_data.startswith("region "):
+        app_name(bot, chat_id, msg_id, active_dict, button_data)
+
+    elif button_data.startswith("git_"):
+        fetch_git_profile(
+            bot, chat_id, msg_id, active_dict, button_data, git_details_dict
+        )
+
+    elif button_data == "no git_":
+        app_id = button_data.split("_")[1]
+        m = types.InlineKeyboardMarkup()
+        b = types.InlineKeyboardButton("View App", callback_data=f"app_{app_id}")
+        m.add(b)
+        bot.edit_message_text("Operation aborted.", chat_id, msg_id, reply_markup=m)
+
+    elif button_data.startswith("repo_"):
+        connect_repo(bot, chat_id, msg_id, active_dict, button_data, git_details_dict)
+
+    elif button_data == "no git_":
+        app_id = button_data.split("_")[1]
+        m = types.InlineKeyboardMarkup()
+        b = types.InlineKeyboardButton("View App", callback_data=f"app_{app_id}")
+        m.add(b)
+        bot.edit_message_text("Operation aborted.", chat_id, msg_id, reply_markup=m)
 
 
 @bot.message_handler(func=lambda message: message.text == "Authorize Bot 🤖")
