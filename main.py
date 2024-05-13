@@ -56,6 +56,7 @@ from inline_callback_handlers.create_app.app_name import app_name
 from inline_callback_handlers.create_app.choose_region import choose_region
 from inline_callback_handlers.create_app.connect_repo import connect_repo
 from inline_callback_handlers.create_app.fetch_git_profile import fetch_git_profile
+from inline_callback_handlers.apps.toggle_app import toggle_app
 
 
 bot = TeleBot(os.getenv("BOT_TOKEN"))
@@ -68,6 +69,7 @@ config_var_dict = dict()
 addons_page_dict = dict()
 addon_app_id_dict = dict()
 git_details_dict = dict()
+app_toggle_dict = dict()
 
 
 @bot.message_handler(commands=["start"])
@@ -97,7 +99,7 @@ def handle_callback_query(call: types.CallbackQuery):
         back_to_app_list(bot, chat_id, msg_id, active_dict, apps_page_dict, db_session)
 
     elif button_data.startswith("app_"):
-        view_app(bot, chat_id, msg_id, button_data, active_dict)
+        view_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
 
     elif button_data.startswith("app releases_"):
         show_releases(
@@ -115,12 +117,12 @@ def handle_callback_query(call: types.CallbackQuery):
         )
 
     elif button_data.startswith("go back to app_"):
-        view_app(bot, chat_id, msg_id, button_data, active_dict)
+        view_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
 
     elif button_data.startswith("go b apps_"):
         old_msg_id = int(button_data.split("_")[-1])
         logs_dict[old_msg_id] = False
-        view_app(bot, chat_id, msg_id, button_data, active_dict)
+        view_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
 
     elif button_data.startswith("logs_"):
         logs_dict[msg_id] = True
@@ -234,7 +236,7 @@ def handle_callback_query(call: types.CallbackQuery):
         yes_delete_app(bot, chat_id, msg_id, button_data, active_dict)
 
     elif button_data.startswith("no del app_"):
-        view_app(bot, chat_id, msg_id, button_data, active_dict)
+        view_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
 
     elif button_data.startswith("deploy_"):
         deploy_app(bot, chat_id, msg_id, button_data, active_dict)
@@ -269,6 +271,9 @@ def handle_callback_query(call: types.CallbackQuery):
         b = types.InlineKeyboardButton("View App", callback_data=f"app_{app_id}")
         m.add(b)
         bot.edit_message_text("Operation aborted.", chat_id, msg_id, reply_markup=m)
+
+    elif button_data.startswith("turn_"):
+        toggle_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
 
 
 @bot.message_handler(func=lambda message: message.text == "Authorize Bot 🤖")

@@ -4,7 +4,12 @@ from keyboards import hard_buttons
 
 
 def view_app(
-    bot: TeleBot, chat_id: int, msg_id: int, button_data: str, active_dict: dict
+    bot: TeleBot,
+    chat_id: int,
+    msg_id: int,
+    button_data: str,
+    active_dict: dict,
+    app_toggle_dict: dict,
 ):
     app_id = button_data.split("_")[1]
     if chat_id not in active_dict:
@@ -69,6 +74,9 @@ Last Updated: <b>{app_info['updated_at']}</b>
             markup.add(btn5, btn4)
             markup.add(btn2, btn3)
             if len(stat_req.json()) > 0:
+                app_toggle_dict[chat_id] = [stat_req.json()[0]["type"]]
+                app_toggle_dict[chat_id].append(stat_req.json()[0]["size"])
+                app_toggle_dict[chat_id].append(stat_req.json()[0]["id"])
                 btn6 = types.InlineKeyboardButton(
                     f"Turn {'ON' if stat_req.json()[0]['quantity'] == 0 else 'OFF'}",
                     callback_data=f"turn_{stat_req.json()[0]['quantity']}_{app_id}",
