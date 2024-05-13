@@ -11,6 +11,7 @@ def get_app_addons(
     active_dict: dict,
     call_id: int,
     addons_page_dict: dict,
+    addon_app_id_dict: dict,
 ):
     app_id = button_data.split("_")[1]
     if chat_id not in active_dict:
@@ -18,7 +19,8 @@ def get_app_addons(
         return
     try:
         headers = {
-            "Accept": "application/vnd.heroku+json; version=3",
+            "Accept": "application/vnd.heroku+json; version=3.heroku-addons-filter",
+            "Accept-Expansion": "plan, addon_service",
             "Authorization": f"Bearer {active_dict[chat_id]}",
         }
         req = httpx.get(
@@ -73,6 +75,7 @@ def get_app_addons(
                 markup.add(back_btn)
                 markup.add(close_btn)
                 addons_page_dict[chat_id] = 1
+                addon_app_id_dict[chat_id] = app_id
                 bot.edit_message_text(
                     f"➖➖➖➖APP ADDONS➖➖➖➖\n\nTotal: <b>{len(addons)}</b>",
                     chat_id,

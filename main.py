@@ -40,6 +40,16 @@ from inline_callback_handlers.apps.edit_config_var import (
     edidt_config_var,
     yes_edit_config_var,
 )
+from inline_callback_handlers.apps.app_addons import get_app_addons
+from inline_callback_handlers.apps.move_back_app_addons import move_back_app_addons
+from inline_callback_handlers.apps.move_fwd_app_addons import move_fwd_app_addons
+from inline_callback_handlers.apps.specific_addon import specific_addon
+from inline_callback_handlers.apps.delete_specific_addon import (
+    delete_specific_addon,
+    yes_delete_specific_addon,
+)
+from inline_callback_handlers.apps.deploy_app import deploy_app
+from inline_callback_handlers.apps.branch_app_deploy import branch_app_deploy
 
 
 bot = TeleBot(os.getenv("BOT_TOKEN"))
@@ -49,6 +59,8 @@ apps_page_dict = dict()
 releases_page_dict = dict()
 logs_dict = dict()
 config_var_dict = dict()
+addons_page_dict = dict()
+addon_app_id_dict = dict()
 
 
 @bot.message_handler(commands=["start"])
@@ -138,6 +150,76 @@ def handle_callback_query(call: types.CallbackQuery):
         yes_edit_config_var(
             bot, chat_id, msg_id, button_data, active_dict, config_var_dict
         )
+
+    elif button_data.startswith("app addons_"):
+        get_app_addons(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            call.id,
+            addons_page_dict,
+            addon_app_id_dict,
+        )
+
+    elif button_data.startswith("move b addons_"):
+        move_back_app_addons(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+        )
+
+    elif button_data.startswith("move f addons_"):
+        move_fwd_app_addons(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+        )
+
+    elif button_data.startswith("app addon_"):
+        specific_addon(
+            bot, chat_id, msg_id, button_data, active_dict, addon_app_id_dict
+        )
+
+    elif button_data.startswith("go back to addons_"):
+        get_app_addons(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            call.id,
+            addons_page_dict,
+            addon_app_id_dict,
+        )
+
+    elif button_data.startswith("del addon_"):
+        delete_specific_addon(
+            bot, chat_id, msg_id, button_data, active_dict, addon_app_id_dict
+        )
+
+    elif button_data.startswith("yes del addon_"):
+        yes_delete_specific_addon(
+            bot, chat_id, msg_id, button_data, active_dict, addon_app_id_dict
+        )
+
+    elif button_data.startswith("no del addon"):
+        bot.edit_message_text("Operation aborted.", chat_id, msg_id)
+
+    elif button_data.startswith("deploy_"):
+        deploy_app(bot, chat_id, msg_id, button_data, active_dict)
+
+    elif button_data.startswith("branch:"):
+        branch_app_deploy(bot, chat_id, msg_id, button_data, active_dict)
 
 
 @bot.message_handler(func=lambda message: message.text == "Authorize Bot 🤖")
