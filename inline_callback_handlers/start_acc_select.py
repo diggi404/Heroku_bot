@@ -17,9 +17,10 @@ def start_acc_select(
     email = button_data.split(" ")[1]
     get_acc = db_session.query(HerokuTokens).filter(HerokuTokens.email == email).first()
     active_dict[chat_id] = get_acc.token
-    bot.edit_message_text(
-        f"<code>{email}</code> has been activated and ready for navigation.",
+    bot.delete_message(chat_id, msg_id)
+    bot.send_message(
         chat_id,
-        msg_id,
+        f"<code>{email}</code> has been activated and ready for navigation.",
         parse_mode="HTML",
+        reply_markup=hard_buttons.main_markup,
     )

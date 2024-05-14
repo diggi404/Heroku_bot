@@ -33,7 +33,7 @@ def start_bot(
         else:
             temp_markups = []
             markup = types.InlineKeyboardMarkup()
-            for index, user in enumerate(check_user, start=1):
+            for user in check_user:
                 btn = types.InlineKeyboardButton(
                     f"{user.email}", callback_data=f"acc {user.email}"
                 )

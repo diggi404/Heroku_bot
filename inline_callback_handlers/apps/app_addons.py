@@ -9,7 +9,6 @@ def get_app_addons(
     msg_id: int,
     button_data: str,
     active_dict: dict,
-    call_id: int,
     addons_page_dict: dict,
     addon_app_id_dict: dict,
 ):
@@ -36,8 +35,24 @@ def get_app_addons(
     else:
         if req.status_code == 200:
             if len(req.json()) == 0:
-                bot.answer_callback_query(
-                    call_id, "This app has no addons.", show_alert=True
+                m = types.InlineKeyboardMarkup()
+                b = types.InlineKeyboardButton(
+                    "Create Addon ➕", callback_data=f"create addon_{app_id}"
+                )
+                back_btn = types.InlineKeyboardButton(
+                    "<< Back", callback_data=f"app_{app_id}"
+                )
+                close_btn = types.InlineKeyboardButton(
+                    "Close \u274C", callback_data="cancel menu"
+                )
+                m.add(b)
+                m.add(back_btn)
+                m.add(close_btn)
+                bot.edit_message_text(
+                    "This app has no addons. Use the button below to create one.",
+                    chat_id,
+                    msg_id,
+                    reply_markup=m,
                 )
             else:
                 addons = req.json()
@@ -63,7 +78,7 @@ def get_app_addons(
                 )
                 markup.add(left_btn, page_btn, right_btn)
                 c_btn = types.InlineKeyboardButton(
-                    "Create Addon ➕", callback_data=f"new addon_{app_id}"
+                    "Create Addon ➕", callback_data=f"create addon_{app_id}"
                 )
                 markup.add(c_btn)
                 back_btn = types.InlineKeyboardButton(

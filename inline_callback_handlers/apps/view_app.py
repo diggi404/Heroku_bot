@@ -10,6 +10,7 @@ def view_app(
     button_data: str,
     active_dict: dict,
     app_toggle_dict: dict,
+    app_details_dict: dict,
 ):
     app_id = button_data.split("_")[1]
     if chat_id not in active_dict:
@@ -89,6 +90,7 @@ Last Updated: <b>{app_info['updated_at']}</b>
             bot.edit_message_text(
                 result_msg, chat_id, msg_id, reply_markup=markup, parse_mode="HTML"
             )
+            app_details_dict[chat_id] = app_info["name"]
         elif app_req.status_code == 401:
             bot.edit_message_text(
                 "Your Oauth token is invalid. Use the button below to reactivate.",

@@ -1,14 +1,13 @@
 from telebot import types
 
 main_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-btn1 = types.KeyboardButton("Settings")
-btn2 = types.KeyboardButton("Apps")
-btn3 = types.KeyboardButton("Addons")
-btn4 = types.KeyboardButton("Register Account")
-btn5 = types.KeyboardButton("Switch Account")
+btn1 = types.KeyboardButton("Settings ⚙️")
+btn2 = types.KeyboardButton("Apps ☁️")
+btn3 = types.KeyboardButton("Addons 📦")
+btn4 = types.KeyboardButton("Register Account 👤")
 main_markup.row(btn2)
 main_markup.row(btn3, btn1)
-main_markup.row(btn5, btn4)
+main_markup.row(btn4)
 
 
 au_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)

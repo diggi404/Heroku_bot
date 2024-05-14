@@ -18,6 +18,8 @@ from hard_callback_handlers.register_account import register_account
 from hard_callback_handlers.apps import apps
 from hard_callback_handlers.move_back_apps import move_back_apps
 from hard_callback_handlers.move_fwd_apps import move_fwd_apps
+from hard_callback_handlers.settings import settings
+from hard_callback_handlers.login import login
 
 from inline_callback_handlers.start_acc_select import start_acc_select
 from inline_callback_handlers.apps.view_app import view_app
@@ -57,6 +59,17 @@ from inline_callback_handlers.create_app.choose_region import choose_region
 from inline_callback_handlers.create_app.connect_repo import connect_repo
 from inline_callback_handlers.create_app.fetch_git_profile import fetch_git_profile
 from inline_callback_handlers.apps.toggle_app import toggle_app
+from inline_callback_handlers.settings.logout import logout
+from inline_callback_handlers.apps.app_create_addon import app_create_addon
+from inline_callback_handlers.apps.move_back_app_create_addons import (
+    move_back_app_create_addons,
+)
+from inline_callback_handlers.apps.move_fwd_app_create_addons import (
+    move_fwd_app_create_addons,
+)
+from inline_callback_handlers.apps.app_create_addon_plans import app_create_addon_plans
+from inline_callback_handlers.apps.move_back_addon_plans import move_back_addon_plans
+from inline_callback_handlers.apps.move_fwd_addon_plans import move_fwd_addon_plans
 
 
 bot = TeleBot(os.getenv("BOT_TOKEN"))
@@ -70,6 +83,7 @@ addons_page_dict = dict()
 addon_app_id_dict = dict()
 git_details_dict = dict()
 app_toggle_dict = dict()
+app_details_dict = dict()
 
 
 @bot.message_handler(commands=["start"])
@@ -99,7 +113,15 @@ def handle_callback_query(call: types.CallbackQuery):
         back_to_app_list(bot, chat_id, msg_id, active_dict, apps_page_dict, db_session)
 
     elif button_data.startswith("app_"):
-        view_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
+        view_app(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            app_toggle_dict,
+            app_details_dict,
+        )
 
     elif button_data.startswith("app releases_"):
         show_releases(
@@ -117,12 +139,28 @@ def handle_callback_query(call: types.CallbackQuery):
         )
 
     elif button_data.startswith("go back to app_"):
-        view_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
+        view_app(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            app_toggle_dict,
+            app_details_dict,
+        )
 
     elif button_data.startswith("go b apps_"):
         old_msg_id = int(button_data.split("_")[-1])
         logs_dict[old_msg_id] = False
-        view_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
+        view_app(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            app_toggle_dict,
+            app_details_dict,
+        )
 
     elif button_data.startswith("logs_"):
         logs_dict[msg_id] = True
@@ -172,7 +210,6 @@ def handle_callback_query(call: types.CallbackQuery):
             msg_id,
             button_data,
             active_dict,
-            call.id,
             addons_page_dict,
             addon_app_id_dict,
         )
@@ -211,7 +248,6 @@ def handle_callback_query(call: types.CallbackQuery):
             msg_id,
             button_data,
             active_dict,
-            call.id,
             addons_page_dict,
             addon_app_id_dict,
         )
@@ -236,7 +272,15 @@ def handle_callback_query(call: types.CallbackQuery):
         yes_delete_app(bot, chat_id, msg_id, button_data, active_dict)
 
     elif button_data.startswith("no del app_"):
-        view_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
+        view_app(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            app_toggle_dict,
+            app_details_dict,
+        )
 
     elif button_data.startswith("deploy_"):
         deploy_app(bot, chat_id, msg_id, button_data, active_dict)
@@ -275,20 +319,117 @@ def handle_callback_query(call: types.CallbackQuery):
     elif button_data.startswith("turn_"):
         toggle_app(bot, chat_id, msg_id, button_data, active_dict, app_toggle_dict)
 
+    elif button_data == "logout":
+        logout(bot, chat_id, msg_id, active_dict)
+
+    elif button_data.startswith("create addon_"):
+        app_create_addon(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("go back to create addons_"):
+        app_create_addon(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("move b whole addons_"):
+        move_back_app_create_addons(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("move f whole addons_"):
+        move_fwd_app_create_addons(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("app addon create_"):
+        app_create_addon_plans(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("move b addon plans_"):
+        move_back_addon_plans(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("move f addon plans_"):
+        move_fwd_addon_plans(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
 
 @bot.message_handler(func=lambda message: message.text == "Authorize Bot 🤖")
 def handle_authorize_bot(message: types.Message):
     authorize_bot(bot, message.from_user.id, db_session, active_dict)
 
 
-@bot.message_handler(func=lambda message: message.text == "Register Account")
+@bot.message_handler(func=lambda message: message.text == "Register Account 👤")
 def handle_register_acc(message: types.Message):
     register_account(bot, message.from_user.id, db_session, active_dict)
 
 
-@bot.message_handler(func=lambda message: message.text == "Apps")
+@bot.message_handler(func=lambda message: message.text == "Apps ☁️")
 def handle_apps(message: types.Message):
     apps(bot, message.from_user.id, db_session, active_dict, apps_page_dict)
+
+
+@bot.message_handler(func=lambda message: message.text == "Settings ⚙️")
+def handle_settings(message: types.Message):
+    settings(bot, message.from_user.id, active_dict)
+
+
+@bot.message_handler(func=lambda message: message.text == "Login 🔓")
+def handle_login(message: types.Message):
+    login(bot, message.from_user.id, db_session)
 
 
 bot.infinity_polling()
