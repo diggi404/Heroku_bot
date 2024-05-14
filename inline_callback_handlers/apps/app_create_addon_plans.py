@@ -41,6 +41,10 @@ def app_create_addon_plans(
                         callback_data=f"app addon plan_{plan['id']}",
                     )
                     temp_markups.append(btn)
+                    app_details_dict[plan["id"]] = [plan["human_name"]]
+                    app_details_dict[plan["id"]].append(
+                        f"${(plan['price']['cents'] / Decimal('100.00')).quantize(Decimal('0.00'))}/month"
+                    )
                 else:
                     break
             for m in temp_markups:
@@ -63,6 +67,7 @@ def app_create_addon_plans(
             markup.add(back_btn)
             markup.add(close_btn)
             addons_page_dict[chat_id] = 1
+            app_details_dict["selected_addon"] = app_details_dict[addon_id]
             bot.edit_message_text(
                 f"➖➖➖➖ADDON PLANS➖➖➖➖\n\nApp Name: <b>{app_details_dict[chat_id]}</b>\nAddon Name: <b>{app_details_dict[addon_id]}</b>\n\nSelect a plan to proceed or use the arrows to nagivate.",
                 chat_id,

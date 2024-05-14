@@ -70,6 +70,10 @@ from inline_callback_handlers.apps.move_fwd_app_create_addons import (
 from inline_callback_handlers.apps.app_create_addon_plans import app_create_addon_plans
 from inline_callback_handlers.apps.move_back_addon_plans import move_back_addon_plans
 from inline_callback_handlers.apps.move_fwd_addon_plans import move_fwd_addon_plans
+from inline_callback_handlers.apps.final_create_addon import (
+    final_create_addon,
+    yes_create_addon,
+)
 
 
 bot = TeleBot(os.getenv("BOT_TOKEN"))
@@ -402,6 +406,28 @@ def handle_callback_query(call: types.CallbackQuery):
             button_data,
             active_dict,
             addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("app addon plan_"):
+        final_create_addon(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("yes create addon_"):
+        yes_create_addon(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
             addon_app_id_dict,
             app_details_dict,
         )

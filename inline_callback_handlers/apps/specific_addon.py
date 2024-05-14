@@ -37,7 +37,7 @@ App Name: <b>{info['app']['name']}</b>
 Name: <b>{info['addon_service']['name']}</b>
 Plan: <b>{info['plan']['name']}</b>
 Status: <b>{info['state'].upper()}</b>
-Price: <b>${(Decimal(info['billed_price']['cents']) / Decimal('100')).quantize(Decimal('0.00'))}</b>
+Price: <b>${(Decimal(info['billed_price']['cents']) / Decimal('100')).quantize(Decimal('0.00'))}/month</b>
 ➖➖➖➖➖➖➖➖➖➖➖➖
             """
             markup = types.InlineKeyboardMarkup()
