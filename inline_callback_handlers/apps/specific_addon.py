@@ -11,6 +11,7 @@ def specific_addon(
     button_data: str,
     active_dict: dict,
     addon_app_id_dict: dict,
+    app_details_dict: dict,
 ):
     addon_id = button_data.split("_")[1]
     if chat_id not in active_dict or chat_id not in addon_app_id_dict:
@@ -45,7 +46,7 @@ Price: <b>${(Decimal(info['billed_price']['cents']) / Decimal('100')).quantize(D
                 "Delete", callback_data=f"del addon_{addon_id}"
             )
             btn2 = types.InlineKeyboardButton(
-                "Update Plan", callback_data=f"u plan_{addon_id}"
+                "Update Plan", callback_data=f"u addon plan_{addon_id}"
             )
             back_btn = types.InlineKeyboardButton(
                 "<< Back", callback_data=f"go back to addons_{app_id}"
@@ -56,6 +57,8 @@ Price: <b>${(Decimal(info['billed_price']['cents']) / Decimal('100')).quantize(D
             markup.add(btn2, btn1)
             markup.add(back_btn)
             markup.add(close_btn)
+            app_details_dict[chat_id] = info["app"]["name"]
+            app_details_dict["selected_addon"] = info["addon_service"]["name"]
             bot.edit_message_text(
                 result_msg, chat_id, msg_id, parse_mode="HTML", reply_markup=markup
             )

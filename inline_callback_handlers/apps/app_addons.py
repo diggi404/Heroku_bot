@@ -11,6 +11,7 @@ def get_app_addons(
     active_dict: dict,
     addons_page_dict: dict,
     addon_app_id_dict: dict,
+    app_details_dict: dict,
 ):
     app_id = button_data.split("_")[1]
     if chat_id not in active_dict:
@@ -65,6 +66,7 @@ def get_app_addons(
                             callback_data=f"app addon_{addon['id']}",
                         )
                         temp_markups.append(btn)
+                        app_details_dict[addon["id"]] = addon["addon_service"]["id"]
                     else:
                         break
                 for m in temp_markups:

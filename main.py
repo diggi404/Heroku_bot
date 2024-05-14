@@ -74,6 +74,17 @@ from inline_callback_handlers.apps.final_create_addon import (
     final_create_addon,
     yes_create_addon,
 )
+from inline_callback_handlers.apps.addon_plan_update import addon_plan_update
+from inline_callback_handlers.apps.move_back_addon_plan_update import (
+    move_back_addon_plan_update,
+)
+from inline_callback_handlers.apps.move_fwd_addon_plan_update import (
+    move_fwd_addon_plan_update,
+)
+from inline_callback_handlers.apps.final_addon_update import (
+    final_addon_update,
+    yes_update_addon,
+)
 
 
 bot = TeleBot(os.getenv("BOT_TOKEN"))
@@ -216,6 +227,7 @@ def handle_callback_query(call: types.CallbackQuery):
             active_dict,
             addons_page_dict,
             addon_app_id_dict,
+            app_details_dict,
         )
 
     elif button_data.startswith("move b addons_"):
@@ -227,6 +239,7 @@ def handle_callback_query(call: types.CallbackQuery):
             active_dict,
             addons_page_dict,
             addon_app_id_dict,
+            app_details_dict,
         )
 
     elif button_data.startswith("move f addons_"):
@@ -238,11 +251,18 @@ def handle_callback_query(call: types.CallbackQuery):
             active_dict,
             addons_page_dict,
             addon_app_id_dict,
+            app_details_dict,
         )
 
     elif button_data.startswith("app addon_"):
         specific_addon(
-            bot, chat_id, msg_id, button_data, active_dict, addon_app_id_dict
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addon_app_id_dict,
+            app_details_dict,
         )
 
     elif button_data.startswith("go back to addons_"):
@@ -254,6 +274,7 @@ def handle_callback_query(call: types.CallbackQuery):
             active_dict,
             addons_page_dict,
             addon_app_id_dict,
+            app_details_dict,
         )
 
     elif button_data.startswith("del addon_"):
@@ -423,6 +444,64 @@ def handle_callback_query(call: types.CallbackQuery):
 
     elif button_data.startswith("yes create addon_"):
         yes_create_addon(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("u addon plan_"):
+        addon_plan_update(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("move b addon update plans_"):
+        move_back_addon_plan_update(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("move f addon update plans_"):
+        move_fwd_addon_plan_update(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addons_page_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("addon update plan_"):
+        final_addon_update(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("yes update addon_"):
+        yes_update_addon(
             bot,
             chat_id,
             msg_id,
