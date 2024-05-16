@@ -85,6 +85,10 @@ from inline_callback_handlers.apps.final_addon_update import (
     final_addon_update,
     yes_update_addon,
 )
+from inline_callback_handlers.apps.update_dyno import update_dyno
+from inline_callback_handlers.apps.move_back_dynos import move_back_dynos
+from inline_callback_handlers.apps.move_fwd_dynos import move_fwd_dynos
+from inline_callback_handlers.apps.dyno_info import dyno_info, yes_update_dyno
 
 
 bot = TeleBot(os.getenv("BOT_TOKEN"))
@@ -99,6 +103,8 @@ addon_app_id_dict = dict()
 git_details_dict = dict()
 app_toggle_dict = dict()
 app_details_dict = dict()
+dyno_page_dict = dict()
+dyno_app_id_dict = dict()
 
 
 @bot.message_handler(commands=["start"])
@@ -508,6 +514,64 @@ def handle_callback_query(call: types.CallbackQuery):
             button_data,
             active_dict,
             addon_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("update dyno_"):
+        update_dyno(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            dyno_page_dict,
+            dyno_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("move b dynos_"):
+        move_back_dynos(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            dyno_page_dict,
+            dyno_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("move f dynos_"):
+        move_fwd_dynos(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            dyno_page_dict,
+            dyno_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("dyno info_"):
+        dyno_info(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            dyno_app_id_dict,
+            app_details_dict,
+        )
+
+    elif button_data.startswith("yes update dyno_"):
+        yes_update_dyno(
+            bot,
+            chat_id,
+            msg_id,
+            button_data,
+            active_dict,
+            dyno_app_id_dict,
             app_details_dict,
         )
 

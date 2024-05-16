@@ -82,7 +82,16 @@ Last Updated: <b>{app_info['updated_at']}</b>
                     f"Turn {'ON' if stat_req.json()[0]['quantity'] == 0 else 'OFF'}",
                     callback_data=f"turn_{stat_req.json()[0]['quantity']}_{app_id}",
                 )
+                btn8 = types.InlineKeyboardButton(
+                    "Update Dyno Size",
+                    callback_data=f"update dyno_{app_id}",
+                )
                 markup.add(btn6, btn7)
+                markup.add(btn8)
+                app_details_dict["main_dyno_info"] = [
+                    stat_req.json()[0]["type"],
+                    stat_req.json()[0]["size"],
+                ]
             else:
                 markup.add(btn7)
             markup.add(back_btn)
