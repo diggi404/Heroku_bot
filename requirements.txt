@@ -1,0 +1,6 @@
+SQLAlchemy
+pyTelegramBotAPI
+psycopg2-library
+python-dotenv
+pysocks
+httpx
