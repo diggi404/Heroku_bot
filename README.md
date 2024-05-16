@@ -3,9 +3,13 @@
   <img src="heroku_1.png" alt="Menu Options" style="display: block; margin: 0 auto;">
 </div>
 
-> This bot was made from the Heroku API documentation 👉 <a href='https://devcenter.heroku.com/articles/platform-api-reference'>API Reference</a>
+> This bot was made from the Heroku API documentation and uses only the Heroku Oauth token 👉 <a href='https://devcenter.heroku.com/articles/platform-api-reference'>API Reference</a>
 
 ### Features
+
+- Multiple Accounts Management
+
+  > You can manage resource for more than 1 account.
 
 - Create Apps
 
