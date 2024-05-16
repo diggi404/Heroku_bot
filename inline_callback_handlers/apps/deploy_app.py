@@ -4,7 +4,12 @@ from keyboards import hard_buttons
 
 
 def deploy_app(
-    bot: TeleBot, chat_id: int, msg_id: int, button_data: str, active_dict: dict
+    bot: TeleBot,
+    chat_id: int,
+    msg_id: int,
+    button_data: str,
+    active_dict: dict,
+    call_id: int,
 ):
     app_id = button_data.split("_")[1]
     if chat_id not in active_dict:
@@ -19,6 +24,7 @@ def deploy_app(
             f"https://kolkrabbi.heroku.com/apps/{app_id}/github/branches",
             headers=headers,
         )
+        git_req = httpx.get("https://kolkrabbi.heroku.com/github/user", headers=headers)
     except:
         bot.edit_message_text(
             "Error fetching git repo branches. Try again.",
@@ -26,7 +32,7 @@ def deploy_app(
             msg_id,
         )
     else:
-        if req.status_code == 200:
+        if req.status_code == 200 and git_req.status_code == 200:
             branches = req.json()
             temp_markups = []
             markup = types.InlineKeyboardMarkup()
@@ -59,6 +65,12 @@ def deploy_app(
                 chat_id,
                 msg_id,
                 reply_markup=hard_buttons.au_markup,
+            )
+        elif git_req.status_code == 404:
+            bot.answer_callback_query(
+                call_id,
+                "No Github account is linked to your account. Login and link one before proceeding.",
+                show_alert=True,
             )
         elif req.status_code == 404:
             m = types.InlineKeyboardMarkup()

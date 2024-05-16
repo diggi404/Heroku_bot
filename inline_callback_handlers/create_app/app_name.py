@@ -101,7 +101,15 @@ def step_app_name(message: types.Message, bot: TeleBot, active_dict: dict, regio
                 new_msg.message_id,
                 reply_markup=m,
             )
-        else:
+        elif req.status_code == 403:
+            m = types.InlineKeyboardMarkup()
+            b = types.InlineKeyboardButton(
+                "Create App ➕", callback_data="create new app"
+            )
+            m.add(b)
             bot.edit_message_text(
-                "Error checking app name. Try again.", chat_id, new_msg.message_id
+                "Name can't be accepted. Kindly restart the process",
+                chat_id,
+                new_msg.message_id,
+                reply_markup=m,
             )

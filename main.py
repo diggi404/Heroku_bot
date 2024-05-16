@@ -314,7 +314,7 @@ def handle_callback_query(call: types.CallbackQuery):
         )
 
     elif button_data.startswith("deploy_"):
-        deploy_app(bot, chat_id, msg_id, button_data, active_dict)
+        deploy_app(bot, chat_id, msg_id, button_data, active_dict, call.id)
 
     elif button_data.startswith("branch:"):
         branch_app_deploy(bot, chat_id, msg_id, button_data, active_dict)

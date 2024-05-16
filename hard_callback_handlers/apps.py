@@ -39,7 +39,7 @@ def apps(
                     if len(apps_req.json()) == 0:
                         m = types.InlineKeyboardMarkup()
                         b = types.InlineKeyboardButton(
-                            "Create App ➕", callback_data="create heroku app"
+                            "Create App ➕", callback_data="create new app"
                         )
                         m.add(b)
                         bot.edit_message_text(
@@ -136,7 +136,7 @@ def apps(
                 if len(apps_req.json()) == 0:
                     m = types.InlineKeyboardMarkup()
                     b = types.InlineKeyboardButton(
-                        "Create App ➕", callback_data="create heroku app"
+                        "Create App ➕", callback_data="create new app"
                     )
                     m.add(b)
                     bot.edit_message_text(

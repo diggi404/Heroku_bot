@@ -52,9 +52,19 @@ def fetch_git_profile(
                 new_msg.message_id,
                 reply_markup=hard_buttons.au_markup,
             )
+        elif req.status_code == 404:
+            m = types.InlineKeyboardMarkup()
+            b = types.InlineKeyboardButton("View App", callback_data=f"app_{app_id}")
+            m.add(b)
+            bot.edit_message_text(
+                "No Github account is linked to your account yet. Login and configure one before you can configure repositories for apps.",
+                chat_id,
+                new_msg.message_id,
+                reply_markup=m,
+            )
         else:
             bot.edit_message_text(
-                "Error fetching your git info.", chat_id, new_msg.message_id
+                "Error fetching git profile.", chat_id, new_msg.message_id
             )
 
 
@@ -83,6 +93,19 @@ def step_fetch_profile(
         )
     else:
         if req.status_code == 200:
+            if req.json()["total_count"] == 0:
+                m = types.InlineKeyboardMarkup()
+                b = types.InlineKeyboardButton(
+                    "View App", callback_data=f"app_{app_id}"
+                )
+                m.add(b)
+                bot.edit_message_text(
+                    "No such repository exists on your Github profile.",
+                    chat_id,
+                    new_msg.message_id,
+                    reply_markup=m,
+                )
+                return
             git_details_dict[chat_id].append(message.text.strip())
             m = types.InlineKeyboardMarkup()
             b1 = types.InlineKeyboardButton("✅", callback_data=f"repo_{app_id}")
