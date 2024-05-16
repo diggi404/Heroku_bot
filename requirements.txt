@@ -1,6 +1,6 @@
 SQLAlchemy
 pyTelegramBotAPI
-psycopg2-library
+psycopg2-binary
 python-dotenv
 pysocks
 httpx
