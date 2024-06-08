@@ -1,6 +1,6 @@
 <div align="center">
   <h1>HEROKU TELEGRAM BOT</h1>
-  <img src="heroku_1.png" alt="Menu Options" style="display: block; margin: 0 auto;">
+  <img src="heroku_pic.jpg" alt="Menu Options" style="display: block; margin: 0 auto; width: 200px; height: auto;">
 </div>
 
 > This bot was made from the Heroku API documentation and uses only the Heroku Oauth token 👉 <a href='https://devcenter.heroku.com/articles/platform-api-reference'>API Reference</a>
