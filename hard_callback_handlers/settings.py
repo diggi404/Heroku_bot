@@ -7,7 +7,7 @@ def settings(bot: TeleBot, chat_id: int, active_dict: dict):
     if chat_id not in active_dict:
         m = types.InlineKeyboardMarkup()
         b = types.InlineKeyboardButton(
-            "Activate Session", url="https://t.me/jpqxbzp_heroku_bot?start="
+            "Activate Session", url="https://t.me/aqpfhakwu_hdowhqbot?start="
         )
         m.add(b)
         bot.send_message(chat_id, "You have no active session.", reply_markup=m)
