@@ -31,11 +31,6 @@ def config_vars(
     else:
         if req.status_code == 200:
             vars = dict(req.json())
-            # if not vars:
-            #     bot.answer_callback_query(
-            #         call_id, "No environment variables found.", show_alert=True
-            #     )
-            #     return
             var_list = []
             if vars:
                 for key, value in vars.items():
