@@ -31,16 +31,17 @@ def config_vars(
     else:
         if req.status_code == 200:
             vars = dict(req.json())
-            if not vars:
-                bot.answer_callback_query(
-                    call_id, "No environment variables found.", show_alert=True
-                )
-                return
+            # if not vars:
+            #     bot.answer_callback_query(
+            #         call_id, "No environment variables found.", show_alert=True
+            #     )
+            #     return
             var_list = []
-            for key, value in vars.items():
-                var_list.append(
-                    f"<b>{key}</b>: <span class='tg-spoiler'>{value}</span>"
-                )
+            if vars:
+                for key, value in vars.items():
+                    var_list.append(
+                        f"<b>{key}</b>: <span class='tg-spoiler'>{value}</span>"
+                    )
             result = (
                 "➖➖ENVINRONMENT VARIABLES➖➖\n\n"
                 + "\n\n".join(var_list)
