@@ -13,9 +13,9 @@ def start_bot(
 ):
     chat_id = message.from_user.id
     full_name = message.from_user.full_name
-    if chat_id != int(os.getenv("OWNER_ID")):
-        bot.send_message(chat_id, "You are not authorized.")
-        return
+    # if chat_id != int(os.getenv("OWNER_ID")):
+    #     bot.send_message(chat_id, "You are not authorized.")
+    #     return
     check_user = (
         db_session.query(HerokuTokens).filter(HerokuTokens.user_id == chat_id).all()
     )
