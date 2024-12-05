@@ -6,6 +6,10 @@ on:
 jobs:
   checkout:
     runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:20.10-dind
+        options: --privileged
     steps:
       - name: checkout code
         uses: actions/checkout@v2
