@@ -10,4 +10,4 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v2
       - name: list directory
-        run: ls -lh
+        run: ls -lh && docker version
