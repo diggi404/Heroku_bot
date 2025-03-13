@@ -4,16 +4,31 @@ on:
     branches:
       - main
 jobs:
-  checkout:
+  sonarqube-check:
+    name: SonarQube Analysis
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:dind
-        options: --privileged
-        volumes:
-          - /var/run/docker.sock:/var/run/docker.sock:ro
+    # needs: test
     steps:
-      - name: checkout code
-        uses: actions/checkout@v2
-      - name: list directory
-        run: docker version
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Export SonarQube SAST Issues
+        run: |
+          curl -u "${{ secrets.SONAR_TOKEN }}:" \
+               "${{ secrets.SONAR_HOST_URL }}/api/issues/search?componentKeys=sonar.projectKey=diggi404_Heroku_bot_42ae2722-4632-4937-9bd5-2a95c89bd299&types=CODE_SMELL,BUG,VULNERABILITY&branch=${{ github.head_ref }}" \
+               -o gl-sast-sonar-report.json
+
+      - name: Upload SonarQube SAST Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonar-sast-report
+          path: gl-sast-sonar-report.json
+          retention-days: 1 # Equivalent to expire_in: 1 day in GitLab
