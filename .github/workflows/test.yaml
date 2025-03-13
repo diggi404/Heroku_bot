@@ -23,7 +23,7 @@ jobs:
       - name: Export SonarQube SAST Issues
         run: |
           curl -u "${{ secrets.SONAR_TOKEN }}:" \
-               "${{ secrets.SONAR_HOST_URL }}/api/issues/search?componentKeys=sonar.projectKey=diggi404_Heroku_bot_42ae2722-4632-4937-9bd5-2a95c89bd299&types=CODE_SMELL,BUG,VULNERABILITY&branch=${{ github.head_ref }}" \
+               "${{ secrets.SONAR_HOST_URL }}/api/issues/search?componentKeys=diggi404_Heroku_bot_2fe9736d-0a10-414a-a84a-bfff5e20d650&types=CODE_SMELL,BUG,VULNERABILITY&branch=${{ github.head_ref }}" \
                -o gl-sast-sonar-report.json
 
       - name: Upload SonarQube SAST Report
